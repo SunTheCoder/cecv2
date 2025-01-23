@@ -7,6 +7,9 @@ import { router } from "./router";
 import * as sessionActions from "./redux/session";
 import "./index.css";
 import "leaflet/dist/leaflet.css";
+import { epaDataManager } from "./utils/epaDataManager";
+
+epaDataManager.preloadData();
 
 
 const store = configureStore();
