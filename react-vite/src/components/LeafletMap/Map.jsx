@@ -260,7 +260,7 @@ const ResourceMap = () => {
 
                 <LayersControl position="topright">
                 {/* State Boundaries Layer */}
-                <LayersControl.Overlay checked name="State Boundaries">
+                <LayersControl.Overlay checked name="State Boundaries" >
                     {stateData && <GeoJSON 
                         data={stateData}
                         style={(feature) => ({
@@ -274,7 +274,7 @@ const ResourceMap = () => {
                 </LayersControl.Overlay>
 
                 {/* County Boundaries Layer */}
-                <LayersControl.Overlay name="County Boundaries">
+                <LayersControl.Overlay name="County Boundaries" checked={false}>
                     {countyData && <GeoJSON 
                         data={countyData}
                         style={(feature) => ({
@@ -288,7 +288,7 @@ const ResourceMap = () => {
                 </LayersControl.Overlay>
 
                 {/* Cities Layer */}
-                <LayersControl.Overlay name="Cities with Reservations">
+                <LayersControl.Overlay name="Cities with Reservations" checked={false}>
                     {cityData && <GeoJSON 
                         data={cityData}
                         pointToLayer={(feature, latlng) => L.circleMarker(latlng, {
@@ -303,11 +303,11 @@ const ResourceMap = () => {
                     />}
                 </LayersControl.Overlay>
 
-                <LayersControl.Overlay checked name="Continental U.S.">
+                <LayersControl.Overlay checked name="Continental U.S." >
                     {geojsonData.mainland && <GeoJSON data={geojsonData.mainland} onEachFeature={onEachFeature} />}
                 </LayersControl.Overlay>
 
-                <LayersControl.Overlay checked name="Alaska">
+                <LayersControl.Overlay checked name="Alaska" >
                     {geojsonData.alaska && <GeoJSON data={geojsonData.alaska} onEachFeature={onEachFeature} />}
                 </LayersControl.Overlay>
 
@@ -316,7 +316,7 @@ const ResourceMap = () => {
                 </LayersControl.Overlay>
 
                 {/* EPA Layer */}
-                <LayersControl.Overlay checked name="EPA IRA Communities">
+                <LayersControl.Overlay name="EPA IRA Communities">
                     {epaData && <GeoJSON data={epaData} style={epaStyle} onEachFeature={onEachEPA} />}
                 </LayersControl.Overlay>
                 </LayersControl>

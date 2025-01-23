@@ -27,6 +27,19 @@ export default function Navigation() {
           </span>
         </li>
 
+
+        <li className="relative group inline-block">
+          <NavLink
+            to="/about"
+            className="px-2 py-1 text-lg font-semibold hover:bg-gray-200 rounded transition"
+          >
+            About
+          </NavLink>
+          <span className={tooltipClasses}>
+            Learn more about the Clean Energy Community
+          </span>
+        </li>
+
         {/* Map Link with Tooltip */}
         <li className="relative group inline-block">
           <NavLink
@@ -37,6 +50,42 @@ export default function Navigation() {
           </NavLink>
           <span className={tooltipClasses}>
             View Interactive Map
+          </span>
+        </li>
+        
+        <li className="relative group inline-block">
+          <NavLink
+            to="/contracts"
+            className="px-2 py-1 text-lg font-semibold hover:bg-gray-200 rounded transition"
+          >
+            Contract Opportunities
+          </NavLink>
+          <span className={tooltipClasses}>
+            View Contract Opportunities
+          </span>
+        </li>
+
+        <li className="relative group inline-block">
+          <NavLink
+            to="/community"
+            className="px-2 py-1 text-lg font-semibold hover:bg-gray-200 rounded transition"
+          >
+            Community Opportunities
+          </NavLink>
+          <span className={tooltipClasses}>
+            View Community Opportunities
+          </span>
+        </li>
+
+        <li className="relative group inline-block">
+          <NavLink
+            to="/resources"
+            className="px-2 py-1 text-lg font-semibold hover:bg-gray-200 rounded transition"
+          >
+            Resources
+          </NavLink>
+          <span className={tooltipClasses}>
+            View Resources
           </span>
         </li>
 
