@@ -1,48 +1,79 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LeafletMap from '../components/LeafletMap/Map';
+import ReservationModal from '../components/ReservationModal';
+import { epaDataManager } from '../utils/epaDataManager';
 
 const State = () => {
     const { stateName } = useParams();
+    const [selectedReservation, setSelectedReservation] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [stateData, setStateData] = useState(null);
     const [reservations, setReservations] = useState([]);
+    const [epaData, setEpaData] = useState(null);
 
     useEffect(() => {
-        const fetchStateData = async () => {
-            try {
-                // Fetch state boundaries data
-                const stateResponse = await fetch("/us-state-boundaries.geojson");
-                const stateGeoJSON = await stateResponse.json();
-                
-                // Find the specific state
-                const state = stateGeoJSON.features.find(
-                    feature => feature.properties.name.toLowerCase() === stateName.toLowerCase()
-                );
-                setStateData(state);
+        const loadAllData = async () => {
+            // Load EPA data
+            const epaFeatures = await epaDataManager.preloadData();
+            setEpaData(epaFeatures);
 
-                // Fetch reservations data
-                const reservationsResponse = await fetch("/other_reservation.geojson");
-                const reservationsData = await reservationsResponse.json();
+            // Fetch state boundaries data
+            const stateResponse = await fetch("/us-state-boundaries.geojson");
+            const stateGeoJSON = await stateResponse.json();
+            
+            // Find the specific state
+            const state = stateGeoJSON.features.find(
+                feature => feature.properties.name.toLowerCase() === stateName.toLowerCase()
+            );
+            setStateData(state);
 
-                // Filter reservations within state bounds
-                if (state) {
-                    const bounds = L.geoJSON(state).getBounds();
-                    const stateReservations = reservationsData.features.filter(reservation => {
-                        const [lon, lat] = reservation.geometry.coordinates[0][0];
-                        const point = L.latLng(lat, lon);
-                        return bounds.contains(point);
-                    });
-                    setReservations(stateReservations);
-                }
-            } catch (error) {
-                console.error("Error loading data:", error);
+            // Fetch reservations data
+            const reservationsResponse = await fetch("/other_reservation.geojson");
+            const reservationsData = await reservationsResponse.json();
+
+            // Filter reservations within state bounds
+            if (state) {
+                const bounds = L.geoJSON(state).getBounds();
+                const stateReservations = reservationsData.features.filter(reservation => {
+                    const [lon, lat] = reservation.geometry.coordinates[0][0];
+                    const point = L.latLng(lat, lon);
+                    return bounds.contains(point);
+                });
+                setReservations(stateReservations);
             }
+
+            // Enhance reservations with EPA data
+            const enhancedReservations = stateReservations.map(reservation => {
+                // Find matching EPA feature based on location
+                const matchingEpaFeature = epaFeatures?.features?.find(epaFeature => {
+                    const [resLon, resLat] = reservation.geometry.coordinates[0][0];
+                    const [epaLon, epaLat] = epaFeature.geometry.coordinates[0][0];
+                    
+                    // Use a small threshold for coordinate matching
+                    const threshold = 0.01; // roughly 1km
+                    return Math.abs(resLat - epaLat) < threshold && 
+                           Math.abs(resLon - epaLon) < threshold;
+                });
+
+                return {
+                    ...reservation,
+                    epaData: matchingEpaFeature?.properties || null
+                };
+            });
+
+            setReservations(enhancedReservations);
         };
 
         if (stateName) {
-            fetchStateData();
+            loadAllData();
         }
     }, [stateName]);
+
+    const handleReservationClick = (reservation) => {
+        setSelectedReservation(reservation);
+        setIsModalOpen(true);
+    };
 
     if (!stateData) {
         return <div>Loading...</div>;
@@ -60,19 +91,30 @@ const State = () => {
                         {reservations.length}
                     </span>
                 </h2>
-                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {reservations.map((reservation, index) => (
-                        <li key={index} className="bg-gray-50 rounded-lg p-4 shadow-md cursor-pointer hover:bg-gray-100 transition-colors duration-200">
+                        <div 
+                            key={index} 
+                            onClick={() => handleReservationClick(reservation)}
+                            className="bg-gray-50 rounded-lg p-4 shadow-md cursor-pointer 
+                                     hover:bg-gray-100 transition-colors duration-200"
+                        >
                             <span className="text-gray-700 font-medium">
                                 {reservation.properties.BASENAME}
                             </span>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
             {/* <div className="map-section rounded-lg overflow-hidden shadow-lg" style={{ height: "600px" }}>
                 <LeafletMap />
             </div> */}
+
+            <ReservationModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                reservation={selectedReservation}
+            />
         </div>
     );
 };
