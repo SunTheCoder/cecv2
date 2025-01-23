@@ -31,14 +31,14 @@ const Home = () => {
 
     return (
         <motion.div 
-            className="min-h-screen bg-gray-50"
+            className="min-h-screen bg-stone-50"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
         >
             {/* Hero Section */}
             <motion.section 
-                className="py-20 px-4 bg-gradient-to-br from-blue-600 to-blue-800 text-white"
+                className="py-20 px-4 bg-gradient-to-br from-amber-800 to-stone-900 text-white"
                 variants={itemVariants}
             >
                 <div className="max-w-6xl mx-auto">
@@ -56,38 +56,38 @@ const Home = () => {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        Empowering communities through clean energy initiatives
+                        Nurturing sustainable energy solutions for our communities
                     </motion.p>
                 </div>
             </motion.section>
 
             {/* About Section */}
             <motion.section 
-                className="py-16 px-4"
+                className="py-16 px-4 bg-stone-100"
                 variants={itemVariants}
             >
                 <div className="max-w-6xl mx-auto">
                     <motion.h2 
-                        className="text-3xl font-bold mb-8 text-gray-800"
+                        className="text-3xl font-bold mb-8 text-amber-900"
                         variants={itemVariants}
                     >
                         About CEC
                     </motion.h2>
                     <motion.div 
-                        className="prose prose-lg text-gray-600"
+                        className="prose prose-lg text-stone-700"
                         variants={itemVariants}
                     >
                         <motion.p 
                             className="mb-6"
                             variants={itemVariants}
                         >
-                            The Community Energy Connectors (CEC) initiative, led by the U.S. Department of Energy's Office of State and Community Energy Programs (SCEP), aims to establish a network of regional partner organizations to provide technical assistance and capacity-building support to communities.
+                            The Community Energy Connectors (CEC) initiative, rooted in the U.S. Department of Energy's Office of State and Community Energy Programs (SCEP), cultivates a network of regional partners to provide sustainable energy solutions and empower local communities.
                         </motion.p>
                         <motion.p 
                             className="mb-6"
                             variants={itemVariants}
                         >
-                            The mission of CEC is to strengthen local clean energy support systems by engaging various stakeholders—including utilities, community-based organizations, academic institutions, industry, and economic development agencies—to plan, implement, and scale clean energy projects.
+                            Our mission is to grow resilient local energy ecosystems by bringing together diverse stakeholders—from grassroots organizations to utilities, academic institutions, and local businesses—to plant the seeds of sustainable energy projects and watch them flourish.
                         </motion.p>
                     </motion.div>
                 </div>
@@ -95,40 +95,40 @@ const Home = () => {
 
             {/* Resources Section */}
             <motion.section 
-                className="py-16 px-4 bg-gray-100"
+                className="py-16 px-4 bg-amber-50"
                 variants={itemVariants}
             >
                 <div className="max-w-6xl mx-auto">
                     <motion.h2 
-                        className="text-3xl font-bold mb-8 text-gray-800"
+                        className="text-3xl font-bold mb-8 text-amber-900"
                         variants={itemVariants}
                     >
                         Our Services
                     </motion.h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <motion.div 
-                            className="bg-white p-6 rounded-lg shadow-md"
+                            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600"
                             variants={cardHoverVariants}
                             whileHover="hover"
                         >
-                            <h3 className="text-xl font-semibold mb-4">Technical Assistance</h3>
-                            <p className="text-gray-600">Supporting communities in transforming clean energy goals into "shovel-ready" projects</p>
+                            <h3 className="text-xl font-semibold mb-4 text-stone-800">Technical Assistance</h3>
+                            <p className="text-stone-600">Cultivating clean energy initiatives from seed to harvest, transforming ideas into thriving projects</p>
                         </motion.div>
                         <motion.div 
-                            className="bg-white p-6 rounded-lg shadow-md"
+                            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600"
                             variants={cardHoverVariants}
                             whileHover="hover"
                         >
-                            <h3 className="text-xl font-semibold mb-4">Capacity Building</h3>
-                            <p className="text-gray-600">Providing workshops, training sessions, and resources for stakeholder development</p>
+                            <h3 className="text-xl font-semibold mb-4 text-stone-800">Capacity Building</h3>
+                            <p className="text-stone-600">Growing knowledge through workshops, training sessions, and enriching resources</p>
                         </motion.div>
                         <motion.div 
-                            className="bg-white p-6 rounded-lg shadow-md"
+                            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600"
                             variants={cardHoverVariants}
                             whileHover="hover"
                         >
-                            <h3 className="text-xl font-semibold mb-4">Community Engagement</h3>
-                            <p className="text-gray-600">Facilitating collaboration between local organizations and energy initiatives</p>
+                            <h3 className="text-xl font-semibold mb-4 text-stone-800">Community Engagement</h3>
+                            <p className="text-stone-600">Fostering deep roots between local organizations and sustainable energy initiatives</p>
                         </motion.div>
                     </div>
                 </div>
@@ -136,25 +136,25 @@ const Home = () => {
 
             {/* Contact Section */}
             <motion.section 
-                className="py-16 px-4"
+                className="py-16 px-4 bg-stone-100"
                 variants={itemVariants}
             >
                 <div className="max-w-6xl mx-auto text-center">
                     <motion.h2 
-                        className="text-3xl font-bold mb-8 text-gray-800"
+                        className="text-3xl font-bold mb-8 text-amber-900"
                         variants={itemVariants}
                     >
-                        Get In Touch
+                        Let's Grow Together
                     </motion.h2>
                     <motion.p 
-                        className="text-xl text-gray-600 mb-4"
+                        className="text-xl text-stone-700 mb-4"
                         variants={itemVariants}
                     >
-                        Have questions? We're here to help!
+                        Ready to plant the seeds of change? Reach out to us!
                     </motion.p>
                     <motion.a 
                         href="mailto:info@ceconnectors.org" 
-                        className="text-blue-600 hover:text-blue-800 text-lg font-semibold"
+                        className="text-amber-700 hover:text-amber-900 text-lg font-semibold"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                     >
