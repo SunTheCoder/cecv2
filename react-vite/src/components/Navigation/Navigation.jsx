@@ -40,7 +40,7 @@ export default function Navigation() {
           </span>
         </li>
 
-        <li className="relative group inline-block">
+        {/* <li className="relative group inline-block">
           <NavLink
             to="/login"
             className="px-2 py-1 text-lg font-semibold hover:bg-gray-200 rounded transition"
@@ -50,7 +50,7 @@ export default function Navigation() {
           <span className={tooltipClasses}>
             Sign In to Your Account
           </span>
-        </li>
+        </li> */}
 
         {/* Profile Button with Tooltip */}
         <li className="relative group inline-block ml-auto">

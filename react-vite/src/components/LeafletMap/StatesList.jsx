@@ -23,7 +23,7 @@ const StatesList = ({ stateData, allReservations, cityData, countyData }) => {
             top: '70px',
             zIndex: 1000
         }}>
-            <div className={`bg-white rounded-r-lg shadow-lg transition-all duration-300 ${isExpanded ? 'w-64' : 'w-12'}`}>
+            <div className={`bg-white rounded-lg shadow-lg transition-all duration-300 mb-100 ${isExpanded ? 'w-64' : 'w-12'}`}>
                 <button 
                     onClick={() => setIsExpanded(!isExpanded)}
                     className="absolute -right-3 top-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
