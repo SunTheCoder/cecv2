@@ -14,6 +14,7 @@ import StatesList from "./StatesList";
     const [isExpanded, setIsExpanded] = useState(false);
     const [reservationsByState, setReservationsByState] = useState({});
     const [allReservations, setAllReservations] = useState(null);
+    const [epaData, setEpaData] = useState(null);
 
     // Add a ref to store the map instance
     const mapRef = useRef(null);
@@ -86,25 +87,34 @@ import StatesList from "./StatesList";
         fetchGeoJSONs();
     }, []);
 
-    // Modify the useEffect for ArcGIS layer
+    // Fetch EPA data
     useEffect(() => {
-        if (!mapRef.current) return;
+        const fetchEPAData = async () => {
+            try {
+                const response = await fetch('/api/epa-communities');
+                const data = await response.json();
+                setEpaData(data.data);
+            } catch (error) {
+                console.error("Error fetching EPA data:", error);
+            }
+        };
+        fetchEPAData();
+    }, []);
 
-        console.log("Adding EPA layer..."); // Debug log
+    // Add EPA layer when data is available
+    useEffect(() => {
+        if (!mapRef.current || !epaData) return;
 
-        // Add the EPA IRA layer
-        const epaLayer = esri.featureLayer({
-            url: 'https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/epa_ira/FeatureServer/0',
-            where: "Disadvantaged = 'Yes' AND (American_Indian_Reservations = 'Yes' OR Alaska_Native_Villages = 'Yes' OR Alaska_Native_Allotments = 'Yes')",
-            style: function (feature) {
-                return {
-                    color: '#ff0000', // Changed to red for visibility
-                    weight: 2,
-                    opacity: 0.8,
-                    fillOpacity: 0.4
-                };
+        console.log("Adding EPA layer...");
+
+        const epaLayer = L.geoJSON(epaData, {
+            style: {
+                color: '#ff0000',
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.4
             },
-            onEachFeature: function (feature, layer) {
+            onEachFeature: (feature, layer) => {
                 layer.bindPopup(() => {
                     const properties = feature.properties;
                     const propertyList = Object.entries(properties)
@@ -119,25 +129,12 @@ import StatesList from "./StatesList";
             }
         }).addTo(mapRef.current);
 
-        // Debug event handlers
-        epaLayer.on('loading', function() {
-            console.log('EPA layer loading...');
-        });
-        
-        epaLayer.on('load', function() {
-            console.log('EPA layer loaded!');
-        });
-
-        epaLayer.on('error', function(e) {
-            console.error('Error loading EPA layer:', e);
-        });
-
         return () => {
             if (mapRef.current && epaLayer) {
                 mapRef.current.removeLayer(epaLayer);
             }
         };
-    }, [mapRef.current]); // Only run when map instance changes
+    }, [mapRef.current, epaData]);
 
     // Function to handle feature click and show metadata
     const onEachFeature = (feature, layer) => {
