@@ -34,7 +34,7 @@ const StatesList = ({ stateData, allReservations, cityData, countyData }) => {
                 </button>
                 
                 <div className={`${isExpanded ? 'opacity-100' : 'opacity-0 hidden'} p-4`}>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4">States with Reservations</h2>
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">States with Tribal Nations</h2>
                     <div className="flex flex-col space-y-2 max-h-[calc(100vh-120px)] overflow-y-auto">
                         {statesWithReservations.map(state => (
                             <Link 

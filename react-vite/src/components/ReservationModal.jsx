@@ -220,7 +220,7 @@ const ReservationModal = ({ isOpen, onClose, reservation }) => {
 
                                     {/* Reservation Status */}
                                     <div className="bg-gray-50 p-4 rounded-lg">
-                                        <h4 className="font-semibold text-gray-700 mb-2">Reservation Status</h4>
+                                        <h4 className="font-semibold text-gray-700 mb-2">Tribal Nation Status</h4>
                                         <div className="space-y-2">
                                             <StatusIndicator 
                                                 condition={properties.American_Indian_Reservations === 'Yes'}

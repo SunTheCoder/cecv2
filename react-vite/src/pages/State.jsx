@@ -86,7 +86,7 @@ const State = () => {
             </h1>
             <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                    <span className="mr-2">Reservations in this state:</span>
+                    <span className="mr-2">Tribal Nations in this state:</span>
                     <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
                         {reservations.length}
                     </span>
