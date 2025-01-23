@@ -1,9 +1,71 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { epaDataManager } from '../utils/epaDataManager';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+
+const MapPreview = ({ geometry }) => {
+    if (!geometry) {
+        console.log("No geometry provided to MapPreview");
+        return null;
+    }
+
+    console.log("Geometry received:", geometry); // Debug log
+
+    const mapStyle = {
+        height: "200px",
+        width: "100%",
+        borderRadius: "0.5rem",
+        border: "1px solid #ccc" // Added border to make container visible
+    };
+
+    // Create GeoJSON feature
+    const geoJsonData = {
+        type: "FeatureCollection",
+        features: [{
+            type: "Feature",
+            geometry: geometry,
+            properties: {}
+        }]
+    };
+
+    // Calculate center point instead of bounds
+    const center = [
+        geometry.coordinates[0][0][1], // latitude
+        geometry.coordinates[0][0][0]  // longitude
+    ];
+
+    return (
+        <div style={{ height: "200px", width: "100%", marginBottom: "1rem" }}>
+            <MapContainer
+                key={`${center[0]}-${center[1]}`}
+                center={center}
+                zoom={8}
+                style={mapStyle}
+                zoomControl={false}
+                dragging={false}
+                scrollWheelZoom={false}
+                doubleClickZoom={false}
+            >
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                />
+                <GeoJSON data={geoJsonData} style={{
+                    color: "#ff0000",
+                    weight: 2,
+                    opacity: 0.8,
+                    fillColor: "#ff0000",
+                    fillOpacity: 0.35
+                }} />
+            </MapContainer>
+        </div>
+    );
+};
 
 const ReservationModal = ({ isOpen, onClose, reservation }) => {
     if (!reservation) return null;
+
+    console.log("Reservation data:", reservation); // Debug log
 
     const properties = reservation.properties;
     const epaCommunities = epaDataManager.getData();
@@ -48,6 +110,11 @@ const ReservationModal = ({ isOpen, onClose, reservation }) => {
                                 <Dialog.Title as="h3" className="text-2xl font-bold text-gray-900 mb-4">
                                     {properties.BASENAME}
                                 </Dialog.Title>
+
+                                {/* Map Preview */}
+                                <div className="mb-4">
+                                    <MapPreview geometry={reservation.geometry} />
+                                </div>
 
                                 <div className="mt-4 space-y-4">
                                     {/* Location Information */}
