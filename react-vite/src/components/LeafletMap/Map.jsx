@@ -288,7 +288,7 @@ const ResourceMap = () => {
                 </LayersControl.Overlay>
 
                 {/* Cities Layer */}
-                <LayersControl.Overlay name="Cities with Reservations" checked={false}>
+                <LayersControl.Overlay name="Cities near Tribal Nations" checked={false}>
                     {cityData && <GeoJSON 
                         data={cityData}
                         pointToLayer={(feature, latlng) => L.circleMarker(latlng, {
@@ -303,20 +303,20 @@ const ResourceMap = () => {
                     />}
                 </LayersControl.Overlay>
 
-                <LayersControl.Overlay checked name="Continental U.S." >
+                <LayersControl.Overlay checked name="Tribal Nations in Continental U.S." >
                     {geojsonData.mainland && <GeoJSON data={geojsonData.mainland} onEachFeature={onEachFeature} />}
                 </LayersControl.Overlay>
 
-                <LayersControl.Overlay checked name="Alaska" >
+                <LayersControl.Overlay checked name="Tribal Nations in Alaska" >
                     {geojsonData.alaska && <GeoJSON data={geojsonData.alaska} onEachFeature={onEachFeature} />}
                 </LayersControl.Overlay>
 
-                <LayersControl.Overlay checked name="Hawaii & Islands">
+                <LayersControl.Overlay checked name="Tribal Nations in Hawaii & Islands">
                     {geojsonData.islands && <GeoJSON data={geojsonData.islands} onEachFeature={onEachFeature} />}
                 </LayersControl.Overlay>
 
                 {/* EPA Layer */}
-                <LayersControl.Overlay name="EPA IRA Communities">
+                <LayersControl.Overlay name="EPA Income Relief Communities">
                     {epaData && <GeoJSON data={epaData} style={epaStyle} onEachFeature={onEachEPA} />}
                 </LayersControl.Overlay>
                 </LayersControl>
