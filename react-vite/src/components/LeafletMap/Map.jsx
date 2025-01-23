@@ -185,6 +185,20 @@ const ResourceMap = () => {
         });
     };
 
+    const onEachEPA = (feature, layer) => {
+        layer.on({
+            click: (e) => {
+                setSelectedFeature({
+                    name: feature.properties.NAME || "EPA IRA Community",
+                    coordinates: e.latlng,
+                    isEPA: true,
+                    fullData: feature.properties
+                });
+                setIsExpanded(false);
+            }
+        });
+    };
+
     const hasReservationsNearby = (feature, type) => {
         if (!allReservations) return false;
         
@@ -303,7 +317,7 @@ const ResourceMap = () => {
 
                 {/* EPA Layer */}
                 <LayersControl.Overlay checked name="EPA IRA Communities">
-                    {epaData && <GeoJSON data={epaData} style={epaStyle} />}
+                    {epaData && <GeoJSON data={epaData} style={epaStyle} onEachFeature={onEachEPA} />}
                 </LayersControl.Overlay>
                 </LayersControl>
 
@@ -312,7 +326,25 @@ const ResourceMap = () => {
                     <div className="p-4 bg-white shadow-lg rounded-lg w-64">
                         <h4 className="text-lg font-bold text-gray-800">{selectedFeature.name}</h4>
                         
-                        {(selectedFeature.isState || selectedFeature.isCounty || selectedFeature.isCity) ? (
+                        {selectedFeature.isEPA ? (
+                            <>
+                                <p className="text-sm text-gray-600 mt-2">
+                                    <strong className="text-gray-900">EPA IRA Community</strong>
+                                </p>
+                                <button 
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    className="mt-3 w-full bg-blue-600 text-white py-1 px-3 rounded-md text-sm font-medium hover:bg-blue-700 transition"
+                                >
+                                    {isExpanded ? "Hide Details ▲" : "Show More ▼"}
+                                </button>
+                                
+                                {isExpanded && (
+                                    <div className="mt-3 max-h-40 overflow-y-auto bg-gray-100 p-2 rounded border border-gray-300">
+                                        <pre className="text-xs text-gray-700">{JSON.stringify(selectedFeature.fullData, null, 2)}</pre>
+                                    </div>
+                                )}
+                            </>
+                        ) : (selectedFeature.isState || selectedFeature.isCounty || selectedFeature.isCity) ? (
                             <div>
                                 <h5 className="text-md font-semibold text-gray-700 mt-2">
                                     Reservations {selectedFeature.isCity ? 'within 100km of this city' : 
