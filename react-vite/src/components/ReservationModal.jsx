@@ -1,10 +1,22 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { epaDataManager } from '../utils/epaDataManager';
 
 const ReservationModal = ({ isOpen, onClose, reservation }) => {
     if (!reservation) return null;
 
     const properties = reservation.properties;
+    const epaCommunities = epaDataManager.getData();
+    
+    // Find matching EPA community data
+    const epaData = epaCommunities?.features?.find(feature => {
+        // Match based on location
+        const [resLon, resLat] = reservation.geometry.coordinates[0][0];
+        const [epaLon, epaLat] = feature.geometry.coordinates[0][0];
+        const threshold = 0.01; // approximately 1km
+        return Math.abs(resLat - epaLat) < threshold && 
+               Math.abs(resLon - epaLon) < threshold;
+    })?.properties;
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -53,15 +65,96 @@ const ReservationModal = ({ isOpen, onClose, reservation }) => {
                                         </div>
                                     </div>
 
-                                    {/* Status Indicators */}
+                                    {/* EPA Community Status */}
                                     <div className="bg-gray-50 p-4 rounded-lg">
-                                        <h4 className="font-semibold text-gray-700 mb-2">Community Status</h4>
+                                        <h4 className="font-semibold text-gray-700 mb-2">EPA Community Status</h4>
+                                        {epaData ? (
+                                            <div className="space-y-4">
+                                                {/* Primary Indicators */}
+                                                <div className="space-y-2">
+                                                    <StatusIndicator 
+                                                        condition={epaData.Disadvantaged === 'Yes'}
+                                                        label="Disadvantaged Community"
+                                                        icon="⚠️"
+                                                        description="Identified as disadvantaged based on environmental and economic factors"
+                                                    />
+                                                    <StatusIndicator 
+                                                        condition={epaData.Low_Income === 'Yes'}
+                                                        label="Low Income Community"
+                                                        icon="💰"
+                                                        description="Meets federal low-income criteria"
+                                                    />
+                                                    <StatusIndicator 
+                                                        condition={epaData.Energy_Community === 'Yes'}
+                                                        label="Energy Community"
+                                                        icon="⚡"
+                                                        description="Identified as an energy community under federal guidelines"
+                                                    />
+                                                </div>
+
+                                                {/* Environmental Indicators */}
+                                                <div>
+                                                    <h5 className="font-medium text-gray-700 mb-2">Environmental Factors</h5>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <DataPoint 
+                                                            label="Climate Risk Index"
+                                                            value={epaData.Climate_Risk_Index}
+                                                            icon="🌡️"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Air Quality Index"
+                                                            value={epaData.Air_Quality_Index}
+                                                            icon="💨"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Water Quality"
+                                                            value={epaData.Water_Quality}
+                                                            icon="💧"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Lead Exposure Risk"
+                                                            value={epaData.Lead_Exposure_Risk}
+                                                            icon="🏗️"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Socioeconomic Indicators */}
+                                                <div>
+                                                    <h5 className="font-medium text-gray-700 mb-2">Socioeconomic Factors</h5>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <DataPoint 
+                                                            label="Unemployment Rate"
+                                                            value={epaData.Unemployment_Rate}
+                                                            icon="👥"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Poverty Rate"
+                                                            value={epaData.Poverty_Rate}
+                                                            icon="📊"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Energy Burden"
+                                                            value={epaData.Energy_Burden}
+                                                            icon="💡"
+                                                        />
+                                                        <DataPoint 
+                                                            label="Housing Burden"
+                                                            value={epaData.Housing_Burden}
+                                                            icon="🏠"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-500 italic">No EPA community data available for this location</p>
+                                        )}
+                                    </div>
+
+                                    {/* Reservation Status */}
+                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                        <h4 className="font-semibold text-gray-700 mb-2">Reservation Status</h4>
                                         <div className="space-y-2">
-                                            <StatusIndicator 
-                                                condition={properties.Disadvantaged === 'Yes'}
-                                                label="Disadvantaged Community"
-                                                icon="⚠️"
-                                            />
                                             <StatusIndicator 
                                                 condition={properties.American_Indian_Reservations === 'Yes'}
                                                 label="American Indian Reservation"
@@ -120,12 +213,30 @@ const ReservationModal = ({ isOpen, onClose, reservation }) => {
     );
 };
 
-const StatusIndicator = ({ condition, label, icon }) => {
+const StatusIndicator = ({ condition, label, icon, description }) => {
     if (!condition) return null;
     return (
-        <div className="flex items-center space-x-2 text-sm">
+        <div className="flex items-start space-x-2">
+            <span className="mt-0.5">{icon}</span>
+            <div>
+                <span className="font-medium">{label}</span>
+                {description && (
+                    <p className="text-sm text-gray-500">{description}</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const DataPoint = ({ label, value, icon }) => {
+    if (!value) return null;
+    return (
+        <div className="flex items-center space-x-2">
             <span>{icon}</span>
-            <span className="font-medium">{label}</span>
+            <div>
+                <div className="text-sm text-gray-600">{label}</div>
+                <div className="font-medium">{value}</div>
+            </div>
         </div>
     );
 };
